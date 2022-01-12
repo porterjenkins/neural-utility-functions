@@ -1,5 +1,6 @@
 import os
 import sys
+import time
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 import config.config as cfg
 import pandas as pd
@@ -328,6 +329,10 @@ class SeqCoocurrenceGenerator(CoocurrenceGenerator):
 
 
 if __name__ == "__main__":
+    initialTime = time.time()
+    #all the code
+    print("Elapsed Time: " + str(time.time() - initialTime))
+    print("original output")
 
     data_dir = cfg.vals['movielens_dir'] + "/preprocessed/"
 
