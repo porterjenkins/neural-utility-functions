@@ -1,0 +1,7 @@
+{
+  "amazon_dir": "/Users/chasewesthoff/Desktop/Datasets/amazon-18",
+  "movielens_dir": "/Users/chasewesthoff/Desktop/Datasets/movie-lens/test",
+  "model_dir": "/Volumes/Porter's Data/penn-state/data-sets/reco/model",
+  "results_dir": "/Volumes/Porter's Data/penn-state/data-sets/reco/results"
+}
+

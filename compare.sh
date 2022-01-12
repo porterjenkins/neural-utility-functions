@@ -1,0 +1,1 @@
+python3 generator.py > output.txt && python3 original_generator.py > original_output.txt && diff output.txt original_output.txt
