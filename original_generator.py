@@ -10,7 +10,7 @@ import torch
 from sklearn.preprocessing import OneHotEncoder
 from scipy.sparse import coo_matrix
 
-class Generator(object):
+class Generator(object): #Todo: update to use pytorch dataloaders/datasets.
 
     def __init__(self, users, items, y, batch_size, shuffle, n_item):
 
@@ -120,7 +120,7 @@ class Generator(object):
 
 
 
-class CoocurrenceGenerator(Generator):
+class CoocurrenceGenerator(Generator): #Todo: update to use pytorch dataloaders/datasets.
     """
     Class to generate minibatch samples, as well as complement and supplement sets
         - Assume that first column of X is user_id, second column is item_id
@@ -215,7 +215,7 @@ class CoocurrenceGenerator(Generator):
 
         return batch
 
-class SeqCoocurrenceGenerator(CoocurrenceGenerator):
+class SeqCoocurrenceGenerator(CoocurrenceGenerator): #deprecated?
 
     def __init__(self, users, items, y, batch_size, shuffle, user_item_rating_map, item_rating_map, c_size, s_size,
                  n_item, seq_len):
@@ -329,33 +329,29 @@ class SeqCoocurrenceGenerator(CoocurrenceGenerator):
 
 
 if __name__ == "__main__":
-    initialTime = time.time()
-    #all the code
-    print("Elapsed Time: " + str(time.time() - initialTime))
-    print("original output")
+    np.random.seed(0) #For testing/comparing results
 
+    initialTime = time.time()
     data_dir = cfg.vals['movielens_dir'] + "/preprocessed/"
 
     df = pd.read_csv(data_dir + "ratings.csv")
 
-    X = df[['user_id', 'item_id']]
-    y = df['rating']
+    X = df[['user_id', 'item_id']].to_numpy()
+    y = df['rating'].to_numpy().reshape(-1,1)
 
     user_item_rating_map = load_dict_output(data_dir, "user_item_rating.json", True)
     item_rating_map = load_dict_output(data_dir, "item_rating.json", True)
     stats = load_dict_output(data_dir, "stats.json")
 
-
-
     X_train, X_test, y_train, y_test = split_train_test_user(X, y)
 
-    gen = CoocurrenceGenerator(X=X_train.values, Y=y_train.values.reshape(-1,1), batch_size=8, shuffle=True,
-                               user_item_rating_map=user_item_rating_map, item_rating_map=item_rating_map, c_size=5,
-                               s_size=5, n_item=stats['n_items'])
+    gen = CoocurrenceGenerator(users=X_train[:,0].reshape(-1,1), items=X_train[:,1].reshape(-1,1), y=y_train.reshape(-1, 1),
+                               batch_size=8, shuffle=True,user_item_rating_map=user_item_rating_map,
+                               item_rating_map=item_rating_map, c_size=5, s_size=5, n_item=stats['n_items'])
 
     while gen.epoch_cntr < 10:
-
-        x_batch, y_batch, X_c, y_c, X_s, y_s = gen.get_batch()
-        print(x_batch)
+        batch = gen.get_batch()
+        print(batch)
 
     print(gen.epoch_cntr)
+    print("Elapsed Time: " + str(time.time() - initialTime))
