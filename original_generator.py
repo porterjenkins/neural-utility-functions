@@ -348,7 +348,7 @@ if __name__ == "__main__":
     while gen.epoch_cntr < 10:
         batch = gen.get_batch()
         print(batch)
-        quit()
+        # quit()
 
     print(gen.epoch_cntr)
     print("Elapsed Time: " + str(time.time() - initialTime))

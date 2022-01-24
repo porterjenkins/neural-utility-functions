@@ -154,7 +154,7 @@ if __name__ == "__main__":
     for epoch in range(num_epochs):
         for batch in enumerate(dataloader):
             print(batch)
-            quit()
+            # quit()
 
 
     print(f'Elapsed Time: {time.time() - initialTime}')
