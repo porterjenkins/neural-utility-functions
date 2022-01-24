@@ -9,8 +9,9 @@ from preprocessing.utils import split_train_test_user, load_dict_output
 import torch
 from sklearn.preprocessing import OneHotEncoder
 from scipy.sparse import coo_matrix
+import pdb
 
-class Generator(object): #Todo: update to use pytorch dataloaders/datasets.
+class Generator(object):
 
     def __init__(self, users, items, y, batch_size, shuffle, n_item):
 
@@ -120,7 +121,7 @@ class Generator(object): #Todo: update to use pytorch dataloaders/datasets.
 
 
 
-class CoocurrenceGenerator(Generator): #Todo: update to use pytorch dataloaders/datasets.
+class CoocurrenceGenerator(Generator):
     """
     Class to generate minibatch samples, as well as complement and supplement sets
         - Assume that first column of X is user_id, second column is item_id
@@ -133,8 +134,6 @@ class CoocurrenceGenerator(Generator): #Todo: update to use pytorch dataloaders/
         self.item_rating_map = item_rating_map
         self.c_size = c_size
         self.s_size = s_size
-
-
 
     def get_complement_set(self, users, items):
         X_c = np.zeros((items.shape[0], self.c_size, items.shape[1]), dtype=np.float32)
@@ -323,13 +322,10 @@ class SeqCoocurrenceGenerator(CoocurrenceGenerator): #deprecated?
 
 
 
-
-
-
-
-
 if __name__ == "__main__":
-    np.random.seed(0) #For testing/comparing results
+    seed = 0
+
+    np.random.seed(seed) #For testing/comparing results
 
     initialTime = time.time()
     data_dir = cfg.vals['movielens_dir'] + "/preprocessed/"
@@ -343,15 +339,16 @@ if __name__ == "__main__":
     item_rating_map = load_dict_output(data_dir, "item_rating.json", True)
     stats = load_dict_output(data_dir, "stats.json")
 
-    X_train, X_test, y_train, y_test = split_train_test_user(X, y)
+    X_train, X_test, y_train, y_test = split_train_test_user(X, y, random_seed=seed)
 
     gen = CoocurrenceGenerator(users=X_train[:,0].reshape(-1,1), items=X_train[:,1].reshape(-1,1), y=y_train.reshape(-1, 1),
-                               batch_size=8, shuffle=True,user_item_rating_map=user_item_rating_map,
+                               batch_size=8, shuffle=False, user_item_rating_map=user_item_rating_map,
                                item_rating_map=item_rating_map, c_size=5, s_size=5, n_item=stats['n_items'])
 
     while gen.epoch_cntr < 10:
         batch = gen.get_batch()
         print(batch)
+        quit()
 
     print(gen.epoch_cntr)
     print("Elapsed Time: " + str(time.time() - initialTime))
