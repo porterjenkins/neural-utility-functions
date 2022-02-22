@@ -136,6 +136,8 @@ class CoocurrenceGenerator(Generator):
         self.s_size = s_size
 
     def get_complement_set(self, users, items):
+        np.random.seed(0)
+
         X_c = np.zeros((items.shape[0], self.c_size, items.shape[1]), dtype=np.float32)
         y_c = np.zeros((users.shape[0], self.c_size), dtype=np.float32)
 
@@ -152,6 +154,7 @@ class CoocurrenceGenerator(Generator):
         return X_c, y_c
 
     def get_supp_set(self, users, items):
+        np.random.seed(0)
 
         X_s = np.zeros((items.shape[0], self.s_size, items.shape[1]), dtype=np.float32)
         y_s = np.zeros((users.shape[0], self.s_size), dtype=np.float32)
@@ -345,10 +348,44 @@ if __name__ == "__main__":
                                batch_size=8, shuffle=False, user_item_rating_map=user_item_rating_map,
                                item_rating_map=item_rating_map, c_size=5, s_size=5, n_item=stats['n_items'])
 
+    np.set_printoptions(threshold=10000)
     while gen.epoch_cntr < 10:
         batch = gen.get_batch()
-        print(batch)
-        # quit()
+
+        users = batch['users']
+        print(users)
+
+        items = batch['items'].A
+        for array in items:
+            print(np.argmax(array))
+
+        y = batch['y']
+        print(y)
+
+        xc = batch['x_c']
+        for array in xc:
+            print(np.argmax(array))
+
+        yc = batch['y_c']
+        print(yc)
+        # for array in yc:
+        #     print(np.argmax(array))
+
+        xs = batch['x_s']
+        for array in xs:
+            print(np.argmax(array))
+
+        ys = batch['y_s']
+        print(ys)
+        # for array in yc:
+        #     print(np.argmax(array))
+
+
+        # items = batch['items'].A
+        # for array in items:
+        #     print(np.argmax(array))
+
+        quit()
 
     print(gen.epoch_cntr)
     print("Elapsed Time: " + str(time.time() - initialTime))

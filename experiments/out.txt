@@ -1,0 +1,102 @@
+
+
+*********iteration 1 ***********
+
+Reading dataset
+Dataset read complete...
+n users: 75
+n items: 3287
+Model intialized
+Beginning Training...
+cpu
+logistic loss
+Training on CPU
+iteration: 0 - loss: 0.64420
+iteration: 50 - loss: 0.57319
+iteration: 100 - loss: 0.33292
+iteration: 150 - loss: 0.12551
+iteration: 200 - loss: 0.05042
+iteration: 250 - loss: 0.02663
+iteration: 300 - loss: 0.01559
+hit ratio: 0.9067
+ndcg: 0.6602
+*********iteration 2 ***********
+
+Reading dataset
+Dataset read complete...
+n users: 75
+n items: 3287
+Model intialized
+Beginning Training...
+cpu
+logistic loss
+Training on CPU
+iteration: 0 - loss: 0.70227
+iteration: 50 - loss: 0.67015
+iteration: 100 - loss: 0.39505
+iteration: 150 - loss: 0.14992
+iteration: 200 - loss: 0.05687
+iteration: 250 - loss: 0.02825
+iteration: 300 - loss: 0.01781
+hit ratio: 0.8533
+ndcg: 0.6067
+*********iteration 3 ***********
+
+Reading dataset
+Dataset read complete...
+n users: 75
+n items: 3287
+Model intialized
+Beginning Training...
+cpu
+logistic loss
+Training on CPU
+iteration: 0 - loss: 0.88163
+iteration: 50 - loss: 0.79222
+iteration: 100 - loss: 0.47189
+iteration: 150 - loss: 0.18084
+iteration: 200 - loss: 0.06923
+iteration: 250 - loss: 0.03372
+iteration: 300 - loss: 0.02071
+hit ratio: 0.8533
+ndcg: 0.5478
+*********iteration 4 ***********
+
+Reading dataset
+Dataset read complete...
+n users: 75
+n items: 3287
+Model intialized
+Beginning Training...
+cpu
+logistic loss
+Training on CPU
+iteration: 0 - loss: 0.75639
+iteration: 50 - loss: 0.66240
+iteration: 100 - loss: 0.39265
+iteration: 150 - loss: 0.14662
+iteration: 200 - loss: 0.05890
+iteration: 250 - loss: 0.02828
+iteration: 300 - loss: 0.01800
+hit ratio: 0.8800
+ndcg: 0.5530
+*********iteration 5 ***********
+
+Reading dataset
+Dataset read complete...
+n users: 75
+n items: 3287
+Model intialized
+Beginning Training...
+cpu
+logistic loss
+Training on CPU
+iteration: 0 - loss: 0.73808
+iteration: 50 - loss: 0.65830
+iteration: 100 - loss: 0.36257
+iteration: 150 - loss: 0.14237
+iteration: 200 - loss: 0.05560
+iteration: 250 - loss: 0.03069
+iteration: 300 - loss: 0.01930
+hit ratio: 0.8667
+ndcg: 0.6162
