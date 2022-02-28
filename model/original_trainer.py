@@ -180,8 +180,8 @@ class NeuralUtilityTrainer(object):
                     avg_loss = cum_loss
                 else:
                     avg_loss = cum_loss / self.loss_step
-                # print("iteration: {} - loss: {:.5f}".format(iter, avg_loss))
-                print("{:.5f}".format(avg_loss))
+                print("iteration: {} - loss: {:.5f}".format(iter, avg_loss))
+                # print("{:.5f}".format(avg_loss))
 
                 cum_loss = 0
 

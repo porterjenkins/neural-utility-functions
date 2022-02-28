@@ -60,7 +60,7 @@ class Generator(object):
         self.idx = np.random.permutation(np.arange(self.n_samples))
 
     def reset(self):
-        print("End of epoch: {}".format(self.epoch_cntr))
+        # print("End of epoch: {}".format(self.epoch_cntr))
         self.curr_idx = 0
         self.epoch_cntr += 1
         if self.shuffle:

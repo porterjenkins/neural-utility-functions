@@ -1,7 +1,7 @@
 {
-  "amazon_dir": "/Users/chasewesthoff/Desktop/Datasets/amazon-18",
-  "movielens_dir": "/Users/chasewesthoff/Desktop/Datasets/movie-lens/test",
-  "model_dir": "/Users/chasewesthoff/Desktop/Datasets/model",
-  "results_dir": "/Users/chasewesthoff/Desktop/Datasets/results"
+  "amazon_dir": "/multiview/NUF/NUF_DATA/amazon-18",
+  "movielens_dir": "/multiview/NUF/NUF_DATA/movie-lens/test",
+  "model_dir": "/multiview/NUF/NUF_DATA/model",
+  "results_dir": "/multiview/NUF/NUF_DATA/model"
 }
 

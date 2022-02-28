@@ -160,7 +160,7 @@ class NUFDataset(Dataset):
 if __name__ == "__main__":
     batch_size = 8
     num_epochs = 10
-    num_workers = 3
+    num_workers = 4
 
     seed = 0
     np.random.seed(seed)  # For testing/comparing results
