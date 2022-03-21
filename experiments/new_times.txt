@@ -1,17 +1,6 @@
 
-
-*********iteration 1 ***********
-elapsed: 
-82
-*********iteration 2 ***********
-elapsed: 
-71
-*********iteration 3 ***********
-elapsed: 
-68
-*********iteration 4 ***********
-elapsed: 
-72
-*********iteration 5 ***********
-elapsed: 
-68
+21
+20
+21
+21
+22

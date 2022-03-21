@@ -29,6 +29,7 @@ parser.add_argument("--c_size", type = int, help = "Size of complement set", def
 parser.add_argument("--s_size", type = int, help = "Size of supplement set", default=5)
 parser.add_argument("--lmbda", type = float, help = "Size of supplement set", default=.1)
 parser.add_argument("--max_iter", type = int, help = "Length of sequences", default=None)
+parser.add_argument("--num_workers", type = int, help = "Numer of workers for the dataloader", default=3)
 
 
 
@@ -55,8 +56,10 @@ params = {
             "eval_k": EVAL_K,
             "loss": args.loss,
             "lambda": args.lmbda,
-            "max_iter": args.max_iter
-        }
+            "max_iter": args.max_iter,
+            "num_workers": args.num_workers
+
+}
 
 
 print("Reading dataset")
@@ -102,7 +105,7 @@ trainer = NeuralUtilityTrainer(users=X_train[:, 0].reshape(-1,1), items=X_train[
                                n_items=stats["n_items"], use_cuda=args.cuda,
                                model_name=MODEL_NAME, model_path=MODEL_DIR,
                                checkpoint=args.checkpoint, lmbda=params["lambda"],
-                               max_iter=params["max_iter"])
+                               max_iter=params["max_iter"], num_workers=params["num_workers"])
 
 
 if params['loss'] == 'utility':

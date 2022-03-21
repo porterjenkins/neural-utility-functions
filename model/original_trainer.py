@@ -11,6 +11,7 @@ from sklearn.preprocessing import OneHotEncoder
 import numpy as np
 from baselines.vae_cf import MultiVAE
 
+import pdb
 
 class NeuralUtilityTrainer(object):
     def __init__(self, users, items, y_train, model, loss, n_epochs, batch_size, lr, loss_step_print, eps,

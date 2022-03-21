@@ -11,6 +11,8 @@ from torch import nn
 from sklearn.preprocessing import OneHotEncoder
 import numpy as np
 from baselines.vae_cf import MultiVAE
+import pdb
+from tqdm import tqdm
 
 
 class NeuralUtilityTrainer(object):
@@ -18,7 +20,7 @@ class NeuralUtilityTrainer(object):
                  use_cuda=False,
                  user_item_rating_map=None, item_rating_map=None, c_size=None, s_size=None, n_items=None,
                  checkpoint=False, model_path=None, model_name=None, X_val=None, y_val=None, lmbda=.1, parallel=True,
-                 max_iter=None):
+                 max_iter=None, num_workers=3):
         self.users = users
         self.items = items
         self.y_train = y_train
@@ -42,7 +44,7 @@ class NeuralUtilityTrainer(object):
         self.n_gpu = torch.cuda.device_count()
         self.lmbda = lmbda
         self.max_iter = max_iter
-
+        self.num_workers = num_workers
         print(self.device)
 
         if self.use_cuda and self.n_gpu > 1 and parallel:
@@ -154,11 +156,12 @@ class NeuralUtilityTrainer(object):
 
         self.dataset = self.get_dataset(self.users, self.items, self.y_train, False)
 
-        dataloader = DataLoader(dataset=self.dataset, batch_size=self.batch_size, shuffle=True)
+        dataloader = DataLoader(dataset=self.dataset, batch_size=self.batch_size, shuffle=True, num_workers=self.num_workers)
         num_batches = len(dataloader)
 
         for epoch in range(self.n_epochs):
-            for i, batch in enumerate(dataloader):
+            pbar = tqdm(enumerate(dataloader), total=len(dataloader))
+            for i, batch in pbar:
 
                 batch['users'] = batch['users'].to(self.device)
                 batch['items'] = batch['items'].squeeze().to(self.device)
@@ -183,9 +186,9 @@ class NeuralUtilityTrainer(object):
                         avg_loss = cum_loss
                     else:
                         avg_loss = cum_loss / self.loss_step
-                    #todo: uncomment this
-                    print("iteration: {} - loss: {:.5f}".format(iter, avg_loss))
-                    # print("{:.5f}".format(avg_loss.item()))
+                    pbar.set_description(
+                        "iteration: {} - loss: {:.5f}".format(iter, avg_loss)
+                    )
                     cum_loss = 0
 
                     loss_arr.append(avg_loss)
@@ -234,7 +237,7 @@ class NeuralUtilityTrainer(object):
 
         self.dataset = self.get_dataset(self.users, self.items, self.y_train, True)
 
-        dataloader = DataLoader(dataset=self.dataset, batch_size=self.batch_size, shuffle=False)
+        dataloader = DataLoader(dataset=self.dataset, batch_size=self.batch_size, shuffle=False, num_workers=self.num_workers)
 
         num_batches = len(dataloader)
 
@@ -331,7 +334,7 @@ class NeuralUtilityTrainer(object):
 
         self.dataset = self.get_dataset(self.users, self.items, self.y_train, True)
 
-        dataloader = DataLoader(dataset=self.dataset, batch_size=self.batch_size, shuffle=False)
+        dataloader = DataLoader(dataset=self.dataset, batch_size=self.batch_size, shuffle=False,  num_workers=self.num_workers)
         num_batches = len(dataloader)
 
         for epoch in range(self.n_epochs):
@@ -512,7 +515,7 @@ class NeuralUtilityTrainer(object):
         self.dataset.update_data(users=users, items=items,
                                    y=y)
 
-        predict_dataloader = DataLoader(dataset=self.dataset, batch_size=batch_size, shuffle=False)
+        predict_dataloader = DataLoader(dataset=self.dataset, batch_size=batch_size, shuffle=False, num_workers=self.num_workers)
 
 
         n = users.shape[0]
@@ -585,7 +588,7 @@ class SequenceTrainer(NeuralUtilityTrainer):
 
         self.dataset = self.get_dataset(self.users, self.items, self.y_train, True)
 
-        dataloader = DataLoader(dataset=self.dataset, batch_size=self.batch_size, shuffle=False)
+        dataloader = DataLoader(dataset=self.dataset, batch_size=self.batch_size, shuffle=False, num_workers=self.num_workers)
         num_batches = len(dataloader)
 
         for epoch in range(self.n_epochs):
@@ -735,7 +738,7 @@ class VariationalTrainer(NeuralUtilityTrainer):
 
         self.dataset = self.get_dataset(self.users, self.items, self.y_train, False)
 
-        dataloader = DataLoader(dataset=self.dataset, batch_size=self.batch_size, shuffle=False)
+        dataloader = DataLoader(dataset=self.dataset, batch_size=self.batch_size, shuffle=False, num_workers=self.num_workers)
         num_batches = len(dataloader)
 
         for epoch in range(self.n_epochs):

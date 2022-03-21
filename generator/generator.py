@@ -7,6 +7,8 @@ import numpy as np
 import pdb
 import math
 
+import torch.nn.functional as F
+
 from sklearn.preprocessing import OneHotEncoder
 from scipy.sparse import coo_matrix
 import config.config as cfg
@@ -21,14 +23,13 @@ class CoocurrenceNUFDataset(Dataset):
         assert len(users) == len(items)
 
         self.users = users
-        # self.items = items
         self.y = y
         self.n_samples = self.users.shape[0]
         self.n_item = n_item if n_item else items.max()
         self.user_item_rating_map = user_item_rating_map
         self.item_rating_map = item_rating_map
         self.one_hot_items, self.items = self._get_item_one_hot(items)
-        self.items = self.items.A
+        self.items = torch.from_numpy(self.items.todense())
         self.c_size = c_size
         self.s_size = s_size
 
@@ -60,6 +61,7 @@ class CoocurrenceNUFDataset(Dataset):
     def _get_item_one_hot(self, items):
         one_hot_items = OneHotEncoder(categories=[range(self.n_item)], sparse=True)
         items = one_hot_items.fit_transform(items).astype(np.float32)
+
         return one_hot_items, items
 
     def get_complement_set(self, user, items):
@@ -112,7 +114,7 @@ class CoocurrenceNUFDataset(Dataset):
     def update_data(self, users, items, y):
         self.users = users
         self.items = self.one_hot_items.fit_transform(items).astype(np.float32)
-        self.items = self.items.A
+        self.items = torch.from_numpy(self.items.todense())
         self.y = y
         self.n_samples = self.users.shape[0]
 
@@ -129,11 +131,11 @@ class NUFDataset(Dataset):
         self.n_samples = self.users.shape[0]
         self.n_item = n_item if n_item else items.max()
         self.one_hot_items, self.items = self._get_item_one_hot(items)
-        self.items = self.items.A #This might be bad (because sparse matrices are fast?)
-
+        self.items = torch.from_numpy(self.items.todense())
 
     def __getitem__(self, index):
         # og doesn't have .reshape(1,-1)... probably not necessary if we're not computing x_c, x_s etc
+
         batch = {'users': self.users[index, :],
                  'items': self.items[index, :].reshape(1, -1),
                  'y': self.y[index, :]
@@ -151,8 +153,7 @@ class NUFDataset(Dataset):
 
     def update_data(self, users, items, y):
         self.users = users
-        self.items = self.one_hot_items.fit_transform(items).astype(np.float32)
-        self.items = self.items.A
+        self.items = self.one_hot_items.fit_transform(items).astype(np.float32).A
         self.y = y
         self.n_samples = self.users.shape[0]
 
@@ -160,7 +161,7 @@ class NUFDataset(Dataset):
 if __name__ == "__main__":
     batch_size = 8
     num_epochs = 10
-    num_workers = 4
+    num_workers = 8
 
     seed = 0
     np.random.seed(seed)  # For testing/comparing results
