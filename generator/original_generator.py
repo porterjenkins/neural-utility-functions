@@ -98,7 +98,7 @@ class Generator(object):
 
         batch_idx = self.idx[self.curr_idx:(self.curr_idx + self.batch_size)]
         items = self.items[batch_idx, :]
-
+        # pdb.set_trace()
         import numpy as np
         if items.dtype == np.float64:
             stop = 0
@@ -116,6 +116,9 @@ class Generator(object):
         batch = {'users': users,
                  'items': items,
                  'y': y_batch}
+        # print("oop")
+        # print(batch['items'])
+        # print(batch['users'])
 
         return batch
 

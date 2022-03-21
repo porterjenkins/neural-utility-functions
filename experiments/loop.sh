@@ -30,7 +30,7 @@ do
   echo "\n" > $newtxt
   echo "" > $ogtimes
   echo "" > $newtimes
-  for i in 1 2
+  for i in 2 1
   do
     if [ $i -gt 1 ]
     then
@@ -39,7 +39,7 @@ do
         PY=$experiment$extension
         start_time=$(date +%s)
 #        echo "*********iteration $j ***********" >> $newtimes
-        CUDA_VISIBLE_DEVICES=0 python3 $PY --epochs 10 --eps 0 --num_workers 8 --cuda True 2>/dev/null
+        CUDA_VISIBLE_DEVICES=0 python3 $PY --epochs 10 --batch_size 512 --eps 0 --num_workers 8 --cuda True 2>/dev/null
         elapsed=$(($(date +%s) - start_time))
 #        echo "elapsed: " >> $newtimes
         echo $elapsed >> $newtimes
@@ -50,7 +50,7 @@ do
       PY=$experiment$og$extension
       start_time=$(date +%s)
 #        echo "*********iteration $j ***********" >> $ogtimes
-        CUDA_VISIBLE_DEVICES=0 python3 $PY --epochs 10 --eps 0 --cuda True 2>/dev/null
+        CUDA_VISIBLE_DEVICES=0 python3 $PY --epochs 10  --batch_size 512 --eps 0 --cuda True 2>/dev/null
         elapsed=$(($(date +%s) - start_time))
 #        echo "elapsed: " >> $ogtimes
         echo $elapsed >> $ogtimes

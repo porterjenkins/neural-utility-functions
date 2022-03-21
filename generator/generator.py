@@ -17,6 +17,7 @@ import config.config as cfg
 class CoocurrenceNUFDataset(Dataset):
 
     def __init__(self, users, items, y, user_item_rating_map, item_rating_map, c_size, s_size, n_item):
+        print("begin init")
 
         assert users.ndim > 1
         assert items.ndim > 1
@@ -32,8 +33,11 @@ class CoocurrenceNUFDataset(Dataset):
         self.items = torch.from_numpy(self.items.todense())
         self.c_size = c_size
         self.s_size = s_size
+        print("finish init")
+
 
     def __getitem__(self, index):
+        print("begin get item")
 
         # generate complement and supplement sets for the index
 
@@ -52,16 +56,18 @@ class CoocurrenceNUFDataset(Dataset):
                  'x_s': X_s,
                  'y_s': y_s
                  }
-
+        print("finish get item")
         return batch
 
     def __len__(self):
         return self.n_samples
 
     def _get_item_one_hot(self, items):
+        print("begin one hot")
         one_hot_items = OneHotEncoder(categories=[range(self.n_item)], sparse=True)
         items = one_hot_items.fit_transform(items).astype(np.float32)
 
+        print("finish one hot")
         return one_hot_items, items
 
     def get_complement_set(self, user, items):
@@ -122,6 +128,7 @@ class CoocurrenceNUFDataset(Dataset):
 class NUFDataset(Dataset):
 
     def __init__(self, users, items, y, n_item):
+        print("Begin init")
         assert users.ndim > 1
         assert items.ndim > 1
         assert len(users) == len(items)
@@ -130,32 +137,50 @@ class NUFDataset(Dataset):
         self.y = y
         self.n_samples = self.users.shape[0]
         self.n_item = n_item if n_item else items.max()
+        # pdb.set_trace()
         self.one_hot_items, self.items = self._get_item_one_hot(items)
-        self.items = torch.from_numpy(self.items.todense())
+
+        # pdb.set_trace()
+        # self.items = torch.from_numpy(self.items.todense())
+        print("finish init")
 
     def __getitem__(self, index):
+        # print("begin get item")
         # og doesn't have .reshape(1,-1)... probably not necessary if we're not computing x_c, x_s etc
+        # print("before")
+        # print(self.items[index, :])
+        # print("after")
+        # print(self.items[index, :].reshape(1, -1))
+
+        items = torch.from_numpy(self.items[index, :].todense())
 
         batch = {'users': self.users[index, :],
-                 'items': self.items[index, :].reshape(1, -1),
+                 'items': items,
                  'y': self.y[index, :]
                  }
-
+        # print("oop")
+        # print(batch['items'])
+        # print(batch['users'])
+        # print("finish get item")
         return batch
 
     def __len__(self):
         return self.n_samples
 
     def _get_item_one_hot(self, items):
+        print("begin one hot")
         one_hot_items = OneHotEncoder(categories=[range(self.n_item)], sparse=True)
         items = one_hot_items.fit_transform(items).astype(np.float32)
+        print("finish one hot")
         return one_hot_items, items
 
     def update_data(self, users, items, y):
+        print("begin update_data")
         self.users = users
-        self.items = self.one_hot_items.fit_transform(items).astype(np.float32).A
+        self.items = self.one_hot_items.fit_transform(items).astype(np.float32)
         self.y = y
         self.n_samples = self.users.shape[0]
+        print("finish update data")
 
 
 if __name__ == "__main__":

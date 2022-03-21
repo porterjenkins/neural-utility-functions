@@ -156,16 +156,23 @@ class NeuralUtilityTrainer(object):
 
         self.dataset = self.get_dataset(self.users, self.items, self.y_train, False)
 
-        dataloader = DataLoader(dataset=self.dataset, batch_size=self.batch_size, shuffle=True, num_workers=self.num_workers)
+        print("NUM WORKERS, HOMIE: ", self.num_workers)
+        print("BATCH SIZE: ", self.batch_size)
+
+        dataloader = DataLoader(dataset=self.dataset, batch_size=self.batch_size, shuffle=True, num_workers=self.num_workers, pin_memory=True)
         num_batches = len(dataloader)
 
         for epoch in range(self.n_epochs):
             pbar = tqdm(enumerate(dataloader), total=len(dataloader))
             for i, batch in pbar:
-
                 batch['users'] = batch['users'].to(self.device)
+                # self.items = torch.from_numpy(self.items.todense())
                 batch['items'] = batch['items'].squeeze().to(self.device)
                 batch['y'] = batch['y'].to(self.device)
+
+                # print("oop")
+                # print(batch['items'])
+                # print(batch['users'])
 
                 # zero gradient
                 self.optimizer.zero_grad()

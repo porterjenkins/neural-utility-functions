@@ -155,12 +155,17 @@ class NeuralUtilityTrainer(object):
         self.generator = self.get_generator(self.users, self.items, self.y_train, False)
 
         while self.generator.epoch_cntr < self.n_epochs:
+            # print(f"Fricken epoch: {self.generator.epoch_cntr}")
 
             batch = self.generator.get_batch(as_tensor=True)
 
             batch['users'] = batch['users'].to(self.device)
             batch['items'] = batch['items'].to(self.device)
             batch['y'] = batch['y'].to(self.device)
+
+            # print("oop")
+            # print(batch['items'])
+            # print(batch['users'])
 
             # zero gradient
             self.optimizer.zero_grad()
